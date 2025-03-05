@@ -1,4 +1,4 @@
-name: DVJA DevSecOps Pipeline
+name: DVJA DevSecOps Pipeline with SCA
 
 on:
   push:
@@ -7,7 +7,6 @@ on:
   pull_request:
 
 permissions:
-  contents: write  # Required to commit files to the repository
   security-events: write
 
 jobs:
@@ -35,28 +34,31 @@ jobs:
       run: |
         docker build -t dvja:${{ github.sha }} .
 
-    # Step 5: Run Trivy vulnerability scanner and generate SARIF file
+    # Step 5: Scan Docker image with Trivy (Container Vulnerabilities)
     - name: Scan Docker image with Trivy
       uses: aquasecurity/trivy-action@master
       with:
         image-ref: dvja:${{ github.sha }}
         format: 'sarif'
-        output: 'trivy-results.sarif'
+        output: 'trivy-container-results.sarif'
         severity: 'HIGH,CRITICAL'
         ignore-unfixed: true
-    
-    # Step 6: Scan project dependencies with Trivy (SCA)
+
+    # Step 6: Upload Trivy container scan results to GitHub Security tab
+    - name: Upload Trivy container scan results
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: 'trivy-container-results.sarif'
+        category: "container-scan"  # Unique category for container scan
+
+    # Step 7: Scan project dependencies with Trivy (SCA)
     - name: Scan filesystem for SCA vulnerabilities with Trivy
       run: |
         trivy fs --format sarif --output trivy-sca-results.sarif --severity HIGH,CRITICAL .
 
-    # Step 7: Upload Trivy scan results to GitHub Security tab
-    - name: Upload Trivy scan results
-      uses: github/codeql-action/upload-sarif@v3
-      with: 
-        sarif_file: 'trivy-results.sarif'
-        
+    # Step 8: Upload Trivy SCA scan results to GitHub Security tab
     - name: Upload Trivy SCA scan results
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: 'trivy-sca-results.sarif'
+        category: "sca-scan"  # Unique category for SCA scan
