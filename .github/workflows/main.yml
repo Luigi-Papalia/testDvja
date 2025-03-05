@@ -44,9 +44,19 @@ jobs:
         output: 'trivy-results.sarif'
         severity: 'HIGH,CRITICAL'
         ignore-unfixed: true
+    
+    # Step 6: Scan project dependencies with Trivy (SCA)
+    - name: Scan filesystem for SCA vulnerabilities with Trivy
+      run: |
+        trivy fs --format sarif --output trivy-sca-results.sarif --severity HIGH,CRITICAL .
 
-    # Step 6: Upload Trivy scan results to GitHub Security tab
+    # Step 7: Upload Trivy scan results to GitHub Security tab
     - name: Upload Trivy scan results
       uses: github/codeql-action/upload-sarif@v3
       with: 
         sarif_file: 'trivy-results.sarif'
+        
+    - name: Upload Trivy SCA scan results
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: 'trivy-sca-results.sarif'
