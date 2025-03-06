@@ -1,4 +1,4 @@
-name: SonarQube Scan
+name: SonarQube Analysis
 
 on:
   push:
@@ -13,13 +13,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Set up PATH for SonarScanner
+      run: |
+        echo "Adding SonarScanner to PATH"
+        export PATH="/opt/sonar-scanner/bin:$PATH"
+        sonar-scanner -h # Test if it's accessible
+
     - name: Run SonarQube Scanner
       env:
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         sonar-scanner \
-          -Dsonar.projectKey=my-project \
+          -Dsonar.projectKey=dvja \
           -Dsonar.sources=. \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
