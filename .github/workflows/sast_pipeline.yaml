@@ -12,6 +12,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+    - name: Debug Environment Variables
+      run: |
+        echo "PATH=$PATH"
+        ls /opt/sonar-scanner/bin/
+        sonar-scanner -h || echo "SonarScanner not found"
 
     - name: Set up PATH for SonarScanner
       run: |
