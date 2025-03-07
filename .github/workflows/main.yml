@@ -65,6 +65,6 @@ jobs:
 
     # Step 9: Run Semgrep SAST scan
     - name: Run Semgrep SAST Scan
-      uses: semgrep/semgrep-action@v4
+      uses: semgrep/semgrep-action@v1
       with:
         app_token: ${{ secrets.SEMGREP_APP_TOKEN }}
