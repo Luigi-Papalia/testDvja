@@ -12,21 +12,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-    - name: Debug Environment Variables
-      run: |
-        echo "PATH=$PATH"
-        ls /opt/sonar-scanner/bin/
-        sonar-scanner -h || echo "SonarScanner not found"
-
-    - name: Set up PATH for SonarScanner
-      run: |
-        echo "Adding SonarScanner to PATH"
-        export PATH="/opt/sonar-scanner/bin:$PATH"
-        sonar-scanner -h # Test if it's accessible
-    
-    - name: Check User Context
-      run: |
-         whoami     
+     
     - name: Run SonarQube Scanner
       env:
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
