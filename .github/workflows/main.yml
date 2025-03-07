@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   dvja-scan:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     # Step 1: Checkout the repository
@@ -62,3 +62,15 @@ jobs:
       with:
         sarif_file: 'trivy-sca-results.sarif'
         category: "sca-scan"  # Unique category for SCA scan
+
+    # Step 9: Run SAST scan with SonarQube
+    - name: Run SonarQube Scanner
+      env:
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        /opt/sonar-scanner/bin/sonar-scanner \
+          -Dsonar.projectKey=dvja \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
