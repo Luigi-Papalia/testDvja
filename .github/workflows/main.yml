@@ -63,15 +63,8 @@ jobs:
         sarif_file: 'trivy-sca-results.sarif'
         category: "sca-scan"  # Unique category for SCA scan
 
-    # Step 9: Run SAST scan with SonarQube
-    - name: Run SonarQube Scanner
-      env:
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        /opt/sonar-scanner/bin/sonar-scanner \
-          -Dsonar.projectKey=dvja \
-          -Dsonar.sources=. \
-          -Dsonar.exclusions=**/*.java \
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+    # Step 9: Run Semgrep SAST scan
+    - name: Run Semgrep SAST Scan
+      uses: semgrep/semgrep-action@v4
+      with:
+        app_token: ${{ secrets.SEMGREP_APP_TOKEN }}
