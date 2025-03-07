@@ -23,13 +23,16 @@ jobs:
         echo "Adding SonarScanner to PATH"
         export PATH="/opt/sonar-scanner/bin:$PATH"
         sonar-scanner -h # Test if it's accessible
-
+    
+    - name: Check User Context
+      run: |
+         whoami     
     - name: Run SonarQube Scanner
       env:
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
-        sonar-scanner \
+        /opt/sonar-scanner/bin/sonar-scanner \
           -Dsonar.projectKey=dvja \
           -Dsonar.sources=. \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
