@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   dvja-scan:
-    runs-on: self-hosted
+    runs-on: [self-hosted, linux, x64]
 
     steps:
     # Step 1: Checkout the repository
