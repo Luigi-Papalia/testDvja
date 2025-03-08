@@ -1,4 +1,4 @@
-name: DVJA DevSecOps Pipeline with SCA
+name: Trivy SCA scan + Docker image scan
 
 on:
   push:
